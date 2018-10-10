@@ -5,17 +5,30 @@ date: "October 10, 2018"
 output: github_document
 ---
 
+#Setup the the document for success!
 ```{r setup}
 knitr::opts_chunk$set(echo = TRUE)
-  fig.width = 6,
-  fig.asp = .6,
+  fig.width = 6
+  fig.asp = .6
   out.width = "90%"
-)
-
-theme_set(theme_bw() + theme(legend.position = "bottom"))
 
 library(tidyverse)
 library(ggridges)
+  
+theme_set(theme_bw() + theme(legend.position = "bottom"))
 ```
 
+#Problem 1
+```{r}
+library(p8105.datasets)
+
+beh_risk = brfss_smart2010 %>% 
+  janitor::clean_names() %>% 
+  filter(topic == "Overall Health") %>% 
+ rename(state = locationabbr, county = locationdesc)
+
+beh_risk = beh_risk %>% 
+  mutate(response = factor(response, levels = c("Poor", "Fair", "Good", "Very good", "Excellent"))) %>% 
+  arrange(desc(response))
+```
 
