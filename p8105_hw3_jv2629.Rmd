@@ -32,3 +32,14 @@ beh_risk = beh_risk %>%
   arrange(desc(response))
 ```
 
+**In 2002, which states were observed at 7 locations?**
+```{r}
+beh_risk %>% 
+  filter(year == 2002) %>%
+  group_by(state) %>% 
+  distinct(state, county) %>%  
+  summarise(county = n()) %>% 
+  View
+```
+
+In 2002, North Carolina, Florida, and Connecticut were observed at 7 locations. 
