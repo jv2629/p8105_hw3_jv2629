@@ -76,9 +76,10 @@ resp5_plot = beh_risk %>%
   select(year, state, county, response, data_value) %>% 
   group_by(year, state, response) %>% 
   summarise(
-    avg_prop = mean(data_value)) %>% 
-  spread(key = response, value = avg_prop)
+    avg_prop = mean(data_value)) 
 
-kable(resp5_plot)
+ggplot(resp5_plot, aes(x = year, y = avg_prop, color = state)) + 
+  geom_line(alpha = .5) +
+  facet_grid(. ~ response)
 ```
 
