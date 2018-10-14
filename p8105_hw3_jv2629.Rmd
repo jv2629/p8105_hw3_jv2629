@@ -14,6 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 library(tidyverse)
 library(ggridges)
+library(knitr)
   
 theme_set(theme_bw() + theme(legend.position = "bottom"))
 ```
@@ -53,5 +54,31 @@ spag_plot = beh_risk %>%
 
 ggplot(data = spag_plot, aes(x = year , y = county, group = state, color = state)) + geom_line()
 
+```
+
+
+**Make a table showing, for the years 2002, 2006, and 2010, the mean and standard deviation of the proportion of “Excellent” responses across locations in NY State.**
+```{r}
+ny_excellent = beh_risk %>% 
+  filter(year %in% c(2002, 2006, 2010)) %>%
+  filter(state == "NY") %>% 
+  filter(response == "Excellent") %>% 
+  group_by(year) %>% 
+  summarise(
+    mean(data_value), sd(data_value))
+
+kable(ny_excellent)
+```
+
+**For each year and state, compute the average proportion in each response category (taking the average across locations in a state). Make a five-panel plot that shows, for each response category separately, the distribution of these state-level averages over time.**
+```{r}
+resp5_plot = beh_risk %>% 
+  select(year, state, county, response, data_value) %>% 
+  group_by(year, state, response) %>% 
+  summarise(
+    avg_prop = mean(data_value)) %>% 
+  spread(key = response, value = avg_prop)
+
+kable(resp5_plot)
 ```
 
