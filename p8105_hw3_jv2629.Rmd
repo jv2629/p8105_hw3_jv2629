@@ -8,7 +8,7 @@ output: github_document
 #Setup the the document for success!
 ```{r setup}
 knitr::opts_chunk$set(echo = TRUE)
-  fig.width = 8
+  fig.width = 10
   fig.asp = .6
   out.width = "90%"
 
@@ -81,5 +81,56 @@ resp5_plot = beh_risk %>%
 ggplot(resp5_plot, aes(x = year, y = avg_prop, color = state)) + 
   geom_line(alpha = .5) +
   facet_grid(. ~ response)
+```
+
+#Problem 2
+
+**Describe the instacart data set.**
+```{r}
+instacart
+```
+
+The instacart data set appears to be data about online orders for groceries from a grocery chain. The data set is 15 columns by 1,384,617 rows. Each row represents a specific item ordered by a customer. The columns represent different information about each item ordered. Many of the items belong to the same order/cart/person as they have the same data values for order_id, user_id, order_dow, order_hour_of_the_day, and days_since_prior_order. Each item has a product_id, a text name, what aisle it is found on, and in what department the product is registered under. For example, as the raw data stands now, row 6 contains product_id 13176, A Bag of Organic Bananas, located in aisle 24 - fresh fruits, department 4 - produce. The data set also contains data on the user's habits/process in ordering: how often the user orders this item, how many orders they have placed, the order in which the item was added to the cart, and the time of week/day the order was placed. 
+
+**How many aisles are there, and which aisles are the most items ordered from?**
+```{r}
+instacart %>% 
+  distinct(aisle_id) %>% 
+  arrange(desc(aisle_id))
+
+instacart %>% 
+  count(aisle_id) %>% 
+  arrange(desc(n))
+
+instacart %>% 
+  filter(aisle_id %in% c(83, 24, 123))
+```
+
+There are 134 aisles. The aisles with the most orders are aisles 83 - fresh vegetables, 24 - fresh fruits, and 123 - packaged vegetables fruits with 150,609, 150,473, and 78,493 items ordered, respectively. 
+
+**Make a plot that shows the number of items ordered in each aisle. Order aisles sensibly, and organize your plot so others can read it.**
+```{r}
+aisle_plot = instacart %>%
+  group_by(aisle) %>% 
+  summarise(n = n()) %>% 
+  arrange(n)
+
+ggplot(aisle_plot, aes(x = aisle, y = n)) + 
+  geom_point()+
+  labs(
+    title = "Number of Items per Aisle",
+    x = "Aisle",
+    y = "Number of Items Ordered",
+    caption = "Data from the p8105 package, data set instacart"
+  ) + scale_x_discrete(labels = abbreviate)
+```
+???????
+
+**Make a table showing the most popular item in each of the aisles “baking ingredients”, “dog food care”, and “packaged vegetables fruits”.**
+```{r}
+popular = instacart %>% 
+  select(aisle, product_id, product_name) %>% 
+  group_by(aisle) %>% 
+  count(product_id)
 ```
 
