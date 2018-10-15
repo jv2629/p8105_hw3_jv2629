@@ -155,3 +155,4 @@ mean_hour = instacart %>%
 kable(mean_hour)
 ```
 
+#Problem 3
