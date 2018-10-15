@@ -115,14 +115,14 @@ aisle_plot = instacart %>%
   summarise(n = n()) %>% 
   arrange(n)
 
-ggplot(aisle_plot, aes(x = aisle, y = n)) + 
-  geom_point()+
+ggplot(aisle_plot, aes(x = n, y = aisle)) + 
+  geom_point() +
   labs(
     title = "Number of Items per Aisle",
-    x = "Aisle",
-    y = "Number of Items Ordered",
+    x = "Number of Items Ordered",
+    y = "Aisle",
     caption = "Data from the p8105 package, data set instacart"
-  ) + scale_x_discrete(labels = abbreviate)
+  ) + theme(axis.text.y = element_text(size = 5, vjust = 1))
 ```
 
 
@@ -153,7 +153,5 @@ mean_hour = instacart %>%
          Friday = "6")
 
 kable(mean_hour)
- 
-  
 ```
 
