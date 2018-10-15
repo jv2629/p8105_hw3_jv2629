@@ -53,9 +53,9 @@ spag_plot = beh_risk %>%
   summarise(county = n()) 
 
 ggplot(data = spag_plot, aes(x = year , y = county, group = state, color = state)) + geom_line()
-
 ```
 
+This plot shows that most states had a consistent number of locations from 2002 to 2010. A few states show an increase and then a decrease. Two states show an increase and then leveling off. Florida is the only state with greatly varying location numbers from averaging about 6 from 2002 - 2006, to 44 in 2007, back to 4 and 8 in 2008 and 2009. Then spiking again in 2010 to 41. 
 
 **Make a table showing, for the years 2002, 2006, and 2010, the mean and standard deviation of the proportion of “Excellent” responses across locations in NY State.**
 ```{r}
@@ -70,6 +70,8 @@ ny_excellent = beh_risk %>%
 kable(ny_excellent)
 ```
 
+New York's Excellent responses across locations appears to stay pretty consistent during the years 2002, 2006, and 2010. 
+
 **For each year and state, compute the average proportion in each response category (taking the average across locations in a state). Make a five-panel plot that shows, for each response category separately, the distribution of these state-level averages over time.**
 ```{r}
 resp5_plot = beh_risk %>% 
@@ -82,6 +84,8 @@ ggplot(resp5_plot, aes(x = year, y = avg_prop, color = state)) +
   geom_line(alpha = .5) +
   facet_grid(. ~ response)
 ```
+
+Across the period under study (2002 - 2010), the states proportions that are awarded Poor, Fair, Good, Very Good, and Excellent, appear to cluster and stay consistent with previous years. Very good has the highest proportions in almost all years. Followed by Good, Excellent, Fair, and Poor, in descending order. 
 
 #Problem 2
 
@@ -113,7 +117,7 @@ There are 134 aisles. The aisles with the most orders are aisles 83 - fresh vege
 aisle_plot = instacart %>%
   group_by(aisle) %>% 
   summarise(n = n()) %>% 
-  arrange(n)
+  arrange(aisle)
 
 ggplot(aisle_plot, aes(x = n, y = aisle)) + 
   geom_point() +
@@ -125,6 +129,7 @@ ggplot(aisle_plot, aes(x = n, y = aisle)) +
   ) + theme(axis.text.y = element_text(size = 5, vjust = 1))
 ```
 
+There are a lot of aisles but two stick out as the most popular aisles for orders. Fresh vegetables and fresh fruits have double the amount of orders as the next most popular aisle, packaged vegetables fruits. 
 
 **Make a table showing the most popular item in each of the aisles “baking ingredients”, “dog food care”, and “packaged vegetables fruits”.**
 ```{r}
@@ -136,6 +141,8 @@ popular = instacart %>%
 
 kable(popular)
 ```
+
+The most popular items in these aisles all happen to start with the letter Z. For baking ingredients its Zero Calorie Sweetner. For dog food care it is Zero Grain Turkey Dog Food. For packaged vegetables fruits it is Zucchini Squash, Baby Courgette. 
 
 **Make a table showing the mean hour of the day at which Pink Lady Apples and Coffee Ice Cream are ordered on each day of the week; format this table for human readers (i.e. produce a 2 x 7 table).**
 ```{r}
@@ -155,4 +162,30 @@ mean_hour = instacart %>%
 kable(mean_hour)
 ```
 
+The mean hours of the day for each day of the week for ordering Pink Lady Apples and Coffee Ice Cream range from 11.36 to 15.38 (11:22am to 3:23pm).
+
 #Problem 3
+
+**Descirbe the ny_noaa data set.**
+```{r}
+ny_noaa
+```
+
+The ny_noaa data set has 2,595,176 rows/observations and 7 variables. It contains data for rain, snow, snow depth and temperatures throughout NY from 1981 to 2007. There is a lot of missing data because weather stations can only collect subsets of these data. The data is organized by collection station and date as observations. 
+
+**Do some data cleaning. Create separate variables for year, month, and day. Ensure observations for temperature, precipitation, and snowfall are given in reasonable units. For snowfall, what are the most commonly observed values? Why?**
+```{r}
+clean_nynoaa = ny_noaa %>% 
+  separate(date, into = c("year", "month", "day"), sep = "-") %>% 
+  mutate(
+    prcp = prcp * 10,
+    tmax = as.numeric(tmax),
+    tmin = as.numeric(tmin))
+
+clean_nynoaa %>% 
+  group_by(snow) %>% 
+  count(snow) %>% 
+  arrange(desc(n))
+```
+
+The most commonly observed value for snow fall is 0. This is probably because it only snows minimall days of only 1/4 of the year in NY. 
