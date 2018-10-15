@@ -124,13 +124,16 @@ ggplot(aisle_plot, aes(x = aisle, y = n)) +
     caption = "Data from the p8105 package, data set instacart"
   ) + scale_x_discrete(labels = abbreviate)
 ```
-???????
+
 
 **Make a table showing the most popular item in each of the aisles “baking ingredients”, “dog food care”, and “packaged vegetables fruits”.**
 ```{r}
 popular = instacart %>% 
   select(aisle, product_id, product_name) %>% 
+  filter(aisle %in% c("baking ingredients", "dog food care", "packaged vegetables fruits")) %>% 
   group_by(aisle) %>% 
-  count(product_id)
+  summarise(most_pop = max(product_name), na.rm = TRUE)
+
+kable(popular)
 ```
 
